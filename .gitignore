@@ -1,0 +1,32 @@
+# Log file
+*.log
+
+# Output file
+*.out
+
+# Maven Target
+target
+
+# IDEA Files
+.idea/
+*.ipr
+*.iws
+*.iml
+
+
+# MacOS
+*.DS_Store
+
+#Ballerina
+*.balx
+tests/*/kubernetes
+tests/*/docker
+velocity.log*
+*.ballerina
+*Ballerina.lock
+*Dependencies.toml
+*final.yaml
+
+*.jtl
+
+node_modules

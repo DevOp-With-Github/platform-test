@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./img/img.png" rel="shortcut icon">
+    <link href="css/styles.css" rel="stylesheet">
+    <title>Ballerina Benchmark Performance</title>
+</head>
+<body>
+<header class="jumbotron">
+    <div class="container">
+        <div class="row align-items-center">
+            <h1 class="display-5">Ballerina Benchmark Comparison</h1>
+        </div>
+    </div>
+</header>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" src="./scripts/jquery.slim.js"></script>
+<script crossorigin="anonymous" src="scripts/popper.min.js"></script>
+<script crossorigin="anonymous" src="scripts/bootstrap.min.js"></script>
+<script src="scripts/chart.js"></script>
+<script src="scripts/d3.min.js" type="text/javascript"></script>
+<div class="container">
+    <div class="row nav_bar">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a aria-current="page" class="nav-link" href="./index.html">Daily Performance Tests</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Language Comparison</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row_header">
+        <h5>Hello World Service Comparison</h5>
+    </div>
+    <div class="row ">
+        <div class="col-12 col-md-9">
+            <form>
+                <div class="form-group row">
+                    <div class="form-check">
+                        <input checked class="form-check-input" name="params" onclick="drawSelectedCharts()"
+                               type="radio"
+                               value="60"><label
+                            class="check-label">60 Users</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="params" onclick="drawSelectedCharts() " type="radio"
+                               value="200"><label
+                            class="check-label">200 Users</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm row-content">
+            <div class="col-12">
+                <h3>Throughput (Req/sec)</h3>
+            </div>
+            <div id=throughputCanvas">
+                <canvas id="throughputCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm row-content">
+            <div class="col-12">
+                <h3>Average Response Time (ms)</h3>
+            </div>
+            <div>
+                <canvas id="averageCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm row-content">
+            <div class="col-12">
+                <h3>Standard Deviation of Response Time</h3>
+            </div>
+            <div>
+                <canvas id="stdDevCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm row-content">
+            <div class="col-12">
+                <h3>99th Percentile of Response Time</h3>
+            </div>
+            <div>
+                <canvas id="percentileCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm row-content">
+            <div class="col-12">
+                <h3>Error Percentage</h3>
+            </div>
+            <div>
+                <canvas id="errorCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // A $( document ).ready() block.
+    $(document).ready(function () {
+        drawSelectedCharts()
+    });
+
+    function getSelectedRadio() {
+        return document.querySelector('input[name="params"]:checked').value;
+    }
+
+    function drawSelectedCharts() {
+        let params = getSelectedRadio();
+        destroyCharts();
+        drawCharts(params);
+        return params
+    }
+
+    function renderChart(dataset, canvas) {
+        let timeFormat = 'DD/MM/YYYY, HH:mm:ss';
+        return new Chart(
+            document.getElementById(canvas),
+            {
+                type: 'line',
+                data: dataset,
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function (t, d) {
+                                    return "1 cpu, 512mb memory"
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                format: timeFormat,
+                                tooltipFormat: 'll'
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
+                        }],
+                    }
+                }
+            }
+        )
+
+    }
+
+    let throughputChart;
+    let averageChart;
+    let stdDevChart;
+    let percentileChart;
+    let errorChart;
+
+    function destroyCharts() {
+        if (throughputChart !== undefined) {
+            throughputChart.destroy();
+        }
+        if (averageChart !== undefined) {
+            averageChart.destroy();
+        }
+        if (stdDevChart !== undefined) {
+            stdDevChart.destroy();
+        }
+        if (percentileChart !== undefined) {
+            percentileChart.destroy();
+        }
+        if (errorChart !== undefined) {
+            errorChart.destroy();
+        }
+    }
+
+
+    function extractData(stats, users, attribute) {
+        let coordinates = [];
+        stats.filter(function (row) {
+            return row['Users'] === users;
+        }).map(function (value) {
+                let date = new Date(value['Date'] * 1000);
+                coordinates.push({"x": date.toISOString().slice(0, 10), "y": value[attribute].replace("%", "")});
+            }
+        );
+        coordinates = sort_by_key(coordinates, 'x');
+        return coordinates;
+    }
+
+    function sort_by_key(array, key) {
+        return array.sort(function (a, b) {
+            let x = new Date(a[key]).getTime();
+            let y = new Date(b[key]).getTime();
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
+    }
+
+    function getColorByLang(lang) {
+        if (lang.includes("ballerina")) {
+            return 'rgb(98,217,198)';
+        } else if (lang.includes("express")) {
+            return 'rgb(200,200,200)';
+        } else if (lang.includes("go")) {
+            return 'rgb(200,100,100)';
+        } else if (lang.includes("flask")) {
+            return 'rgb(125,200,125)';
+        } else if (lang.includes("python")) {
+            return 'rgb(255,150,250)';
+        } else if (lang.includes("node")) {
+            return 'rgb(145,135,145)';
+        } else {
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 255);
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+
+    }
+
+    function drawChart(attribute, chartType, canvasId) {
+        let dataset = [];
+        const promises = [];
+        let urls = ["python_flask_hello", "python_hello", "node_express_hello", "node_hello", "go_hello", "ballerina_hello"];
+        urls.forEach(function (lang) {
+            let url = "https://raw.githubusercontent.com/ballerina-platform/ballerina-performance-cloud/main/summary/" + lang + ".csv";
+            promises.push(d3.csv(url).then(function (stats) {
+                if (chartType !== undefined) {
+                    let color = getColorByLang(lang);
+                    let data = {
+                        label: lang.replace("_hello", ""),
+                        showLine: true,
+                        backgroundColor: color,
+                        borderColor: color,
+                        data: extractData(stats, chartType, attribute)
+                    }
+                    dataset.push(data);
+                }
+            }));
+        });
+
+        Promise.allSettled(promises).then(() => {
+            let datasets = {
+                datasets: dataset
+            };
+            switch (canvasId) {
+                case "throughputCanvas":
+                    throughputChart = renderChart(datasets, "throughputCanvas")
+                    break;
+                case "averageCanvas":
+                    averageChart = renderChart(datasets, "averageCanvas")
+                    break;
+                case "stdDevCanvas":
+                    stdDevChart = renderChart(datasets, "stdDevCanvas")
+                    break;
+                case "percentileCanvas":
+                    percentileChart = renderChart(datasets, "percentileCanvas")
+                    break;
+                case "errorCanvas":
+                    errorChart = renderChart(datasets, "errorCanvas")
+                    break;
+                default:
+                    break;
+            }
+        })
+    }
+
+
+    function drawCharts(chartType) {
+        destroyCharts();
+
+        //Throughput Chart
+        drawChart('Throughput', chartType, 'throughputCanvas');
+
+        // Average Chart
+        drawChart('Average', chartType, 'averageCanvas');
+
+        //Standard Deviation of Response Time Chart
+        drawChart('Std. Dev.', chartType, 'stdDevCanvas');
+
+        //99 percentile of Response Time Chart
+        drawChart('99% Line', chartType, 'percentileCanvas');
+
+        //Error Count Chart
+        drawChart('Error %', chartType, 'errorCanvas');
+
+    }
+
+</script>
+</body>
+</html>
