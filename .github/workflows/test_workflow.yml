@@ -68,8 +68,8 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        payload: [1]
-        users: [50]
+        payload: [50]
+        users: [1]
     env:
       TEST_NAME: "test_passthrough"
       TEST_ROOT: "tests"
