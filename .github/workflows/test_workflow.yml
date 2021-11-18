@@ -153,7 +153,9 @@ jobs:
         command_timeout: '180m' #3 hours
         timeout: 300s #5 mins
         script: |
-          git clone https://github.com/DevOp-With-Github/platform-test.git
+          git config --global user.email "nhitrank@gmail.com"
+          git config --global user.name "KietNhiTran"
+          git clone https://kietnhitran@github.com/DevOp-With-Github/platform-test.git
           pwd
           sudo cp -r platform-test/base-image /
           sudo chmod -R 777 /base-image
