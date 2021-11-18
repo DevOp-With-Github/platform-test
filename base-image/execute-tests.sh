@@ -81,15 +81,15 @@ if [[ -z $concurrent_users ]]; then
 fi
 
 rm -rf ~/uploads
-REPO_NAME="ballerina-performance-cloud"
+REPO_NAME="platform-test"
 rm -rf ~/"${REPO_NAME}"/tests/"$scenario_name"/results
 
 timestamp=$(date +%s)
 branch_name="nightly-$scenario_name-${timestamp}"
 pushd "${REPO_NAME}"
 git checkout -b "${branch_name}"
-git config --global user.email "ballerina-bot@ballerina.org"
-git config --global user.name "ballerina-bot"
+git config --global user.email "nhitrank@gmail.com"
+git config --global user.name "KietNhiTran"
 git status
 git remote -v
 
