@@ -220,11 +220,11 @@ jobs:
       with:
         name: ${{ inputs.clusterName }}
         path: uploads/results/summary.csv
-    - name: upload generated source
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.clusterName }}
-        path: tests/${{ steps.write.outputs.scenario-name }}
+    # - name: upload generated source
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: ${{ inputs.clusterName }}
+    #     path: tests/${{ steps.write.outputs.scenario-name }}
     - name: Undeploy Kubernetes artifacts
       if: always()
       run: |
