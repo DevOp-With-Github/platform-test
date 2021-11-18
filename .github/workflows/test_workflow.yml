@@ -218,3 +218,4 @@ jobs:
     - name: Cleaning up the cluster
       run: |
         az aks delete --name ${{ github.event.inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
+        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
