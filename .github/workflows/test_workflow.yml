@@ -106,6 +106,7 @@ jobs:
           kustomize build ${TEST_ROOT}/${TEST_NAME}/deployment > ${TEST_ROOT}/${TEST_NAME}/final.yaml
           pwd
           ls -al ${TEST_ROOT}/${TEST_NAME}
+          cat ${TEST_ROOT}/${TEST_NAME}/final.yaml
     # - name: Configure AKS
     #   uses: azure/aks-set-context@v1
     #   with:
