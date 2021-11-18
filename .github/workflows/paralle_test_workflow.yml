@@ -1,0 +1,19 @@
+name: test_workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      clusterName:
+        description: 'Cluster name'
+        default: 'bal-perf-cluster-test'
+        required: false
+jobs:
+  execute_test_1:
+    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse@main
+    with:
+      clusterName: ${{ github.event.inputs.clusterName}}-1
+  execute_test_2:
+    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse@main
+    with:
+      clusterName: ${{ github.event.inputs.clusterName}}-2
+  
