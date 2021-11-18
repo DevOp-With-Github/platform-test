@@ -1,4 +1,4 @@
-name: test_workflow
+name: execute_test
 
 on:
   workflow_call:

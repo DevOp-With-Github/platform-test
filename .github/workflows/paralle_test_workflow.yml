@@ -1,4 +1,4 @@
-name: test_workflow
+name: paralle_test_workflow
 
 on:
   workflow_dispatch:
