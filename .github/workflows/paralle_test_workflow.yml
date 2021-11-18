@@ -12,8 +12,26 @@ jobs:
     uses: DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse.yml@main
     with:
       clusterName: ${{ github.event.inputs.clusterName}}-1
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_APP_ID: ${{ secrets.AZURE_APP_ID }}
+      AZURE_APP_PASSWORD: ${{ secrets.AZURE_APP_PASSWORD }}
+      CLUSTER_RESOURCE_GROUP: ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      PPG_ID: ${{ secrets.PPG_ID }}
+      VM_USER: ${{ secrets.VM_USER }}
   execute_test_2:
     uses: DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse.yml@main
     with:
       clusterName: ${{ github.event.inputs.clusterName}}-2
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_APP_ID: ${{ secrets.AZURE_APP_ID }}
+      AZURE_APP_PASSWORD: ${{ secrets.AZURE_APP_PASSWORD }}
+      CLUSTER_RESOURCE_GROUP: ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      PPG_ID: ${{ secrets.PPG_ID }}
+      VM_USER: ${{ secrets.VM_USER }}
   
