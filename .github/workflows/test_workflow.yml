@@ -7,6 +7,10 @@ on:
         description: 'Cluster name'
         default: 'bal-perf-cluster-test'
         required: false
+      test-name:
+        description: 'test name'
+        default: 'test_passthrough'
+        required: false
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -90,8 +94,8 @@ jobs:
         payload: [50]
         users: [1]
     env:
-      TEST_NAME: "test_passthrough"
-      TEST_ROOT: "tests"
+      TEST_NAME: ${{github.event.inputs.test-name}}
+      TEST_ROOT: tests
     steps:
     - uses: actions/checkout@v2
     - name: Login to DockerHub
@@ -103,7 +107,7 @@ jobs:
       uses: ballerina-platform/ballerina-action@master # uses slbeta2
       env:
         CI_BUILD: true
-        WORKING_DIR: tests/test_passthrough
+        WORKING_DIR: tests/${TEST_NAME}
       with:
         args:
           build

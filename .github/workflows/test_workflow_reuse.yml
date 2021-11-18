@@ -7,6 +7,11 @@ on:
         description: 'Cluster name'
         required: true
         type: string
+      test-name:
+        description: 'test name'
+        default: 'test_passthrough'
+        required: false
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -105,7 +110,7 @@ jobs:
         payload: [50]
         users: [1]
     env:
-      TEST_NAME: "test_passthrough"
+      TEST_NAME: ${{inputs.test-name}}
       TEST_ROOT: "tests"
     steps:
     - uses: actions/checkout@v2
