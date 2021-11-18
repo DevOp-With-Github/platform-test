@@ -12,6 +12,11 @@ on:
         default: 'test_passthrough'
         required: false
         type: string
+      sku:
+        description: 'node VM size'
+        default: 'Standard_F16s_v2'
+        required: false
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -61,6 +66,7 @@ jobs:
         AZURE_APP_PASSWORD: ${{ secrets.AZURE_APP_PASSWORD }}
         RESOURCE_GROUP: ${{ secrets.CLUSTER_RESOURCE_GROUP }}
         PPG_ID: ${{ steps.create-ppg.outputs.ppg-id }}
+        VM_SIZE: ${{ inputs.sku }}
       run: |
         az aks create \
             --resource-group "${RESOURCE_GROUP}" \
@@ -68,7 +74,7 @@ jobs:
             --service-principal "${AZURE_APP_ID}"\
             --client-secret "${AZURE_APP_PASSWORD}" \
             --ppg "${PPG_ID}" \
-            --node-vm-size "Standard_F16s_v2" \
+            --node-vm-size "${VM_SIZE}" \
             --node-osdisk-size 256 \
             --node-osdisk-type Managed \
             --node-count 2 \
