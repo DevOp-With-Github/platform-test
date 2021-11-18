@@ -196,10 +196,13 @@ jobs:
     - name: upload results
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.event.inputs.clusterName }}
-        path: |
-          platform-test/tests/${TEST_NAME}
-          uploads/results/summary.csv
+        name: ${{ inputs.clusterName }}
+        path: uploads/results/summary.csv
+    - name: upload generated source
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.clusterName }}
+        path: platform-test/tests/${{ steps.write.outputs.scenario-name }}
     - name: Undeploy Kubernetes artifacts
       if: always()
       run: |
@@ -221,5 +224,5 @@ jobs:
         creds: ${{secrets.AZURE_CREDENTIALS}}
     - name: Cleaning up the cluster
       run: |
-        az aks delete --name ${{ github.event.inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
-        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+        az aks delete --name ${{ github.event.inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
+        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
