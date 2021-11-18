@@ -161,7 +161,7 @@ jobs:
           sudo chmod -R 777 /base-image
           sh /base-image/init.sh
           source /etc/profile.d/10-perf-vm.sh
-          execute-tests.sh -c $IP -s $SCENARIO_NAME -t $GITHUB_TOKEN -p $PAYLOAD -u $USERS
+          execute-tests.sh -c $IP -s $SCENARIO_NAME -p $PAYLOAD -u $USERS
     - name: copy file to host
       run: |
         ls -la
