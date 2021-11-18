@@ -218,7 +218,7 @@ jobs:
     - name: upload results
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ inputs.clusterName }}-${{ matrix.vm_count }}
+        name: ${{ inputs.clusterName }}
         path: |
           uploads/results
           platform-test/tests/${{ steps.write.outputs.scenario-name }}
