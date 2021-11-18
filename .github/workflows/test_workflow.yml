@@ -202,7 +202,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ inputs.clusterName }}
-        path: platform-test/tests/${{ steps.write.outputs.scenario-name }}
+        path: tests/${{ steps.write.outputs.scenario-name }}
     - name: Undeploy Kubernetes artifacts
       if: always()
       run: |
