@@ -129,7 +129,7 @@ jobs:
       uses: ballerina-platform/ballerina-action@master # uses slbeta2
       env:
         CI_BUILD: true
-        WORKING_DIR: tests/${TEST_NAME}
+        WORKING_DIR: tests/${{inputs.test-name}}
       with:
         args:
           build
