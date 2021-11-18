@@ -159,6 +159,16 @@ jobs:
           sh /base-image/init.sh
           source /etc/profile.d/10-perf-vm.sh
           execute-tests.sh -c $IP -s $SCENARIO_NAME -t $GITHUB_TOKEN -p $PAYLOAD -u $USERS
+    - name: copy file to host
+      run: |
+        ls -la
+        scp -r -v -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:uploads uploads
+        ls -la
+    - name: upload results
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ github.event.inputs.clusterName }}-${{ matrix.vm_count }}
+        path: uploads/results
     - name: Undeploy Kubernetes artifacts
       if: always()
       run: |
