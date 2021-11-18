@@ -20,7 +20,7 @@ jobs:
     uses: DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse.yml@main
     with:
       clusterName: ${{ github.event.inputs.clusterName}}-1
-      test-name: ${{ github.event.inputs.clusterName}}
+      test-name: ${{ github.event.inputs.test-name}}
       sku: ${{ github.event.inputs.sku}}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

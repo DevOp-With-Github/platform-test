@@ -129,7 +129,7 @@ jobs:
       uses: ballerina-platform/ballerina-action@master # uses slbeta2
       env:
         CI_BUILD: true
-        WORKING_DIR: tests/test_passthrough
+        WORKING_DIR: tests/${TEST_NAME}
       with:
         args:
           build
