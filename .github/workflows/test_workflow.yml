@@ -88,6 +88,8 @@ jobs:
       with:
         args:
           build
+    - name: image tag
+      run: docker tag xlight05/test_passthrough trankietnhi/xlight05/test_passthrough:latest  
     - name: image list
       run: docker image ls
   #   - name: Docker push
