@@ -194,7 +194,7 @@ jobs:
       with:
         name: ${{ github.event.inputs.clusterName }}
         path: |
-          platform-test/tests/${{TEST_NAME}}
+          platform-test/tests/${TEST_NAME}
           uploads/results/summary.csv
     - name: Undeploy Kubernetes artifacts
       if: always()
