@@ -154,6 +154,7 @@ jobs:
         timeout: 300s #5 mins
         script: |
           git clone https://github.com/DevOp-With-Github/platform-test.git
+          pwd
           sudo cp -r platform-test/base-image /
           sudo chmod -R 777 /base-image
           sh /base-image/init.sh

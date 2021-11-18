@@ -112,7 +112,8 @@ if [[ $payload_size != "0" ]]; then
 fi
 
 echo "--------Running test $scenario_name--------"
-pushd "${REPO_NAME}"/tests/"$scenario_name"/scripts/
+pushd ~/"${REPO_NAME}"/tests/"$scenario_name"/scripts/
+pwd
 start_time=$(date +%Y-%m-%dT%H:%M -u)
 chmod +x run.sh
 ./run.sh -s "$scenario_name" -u "$concurrent_users" -f "$payload_flags"
@@ -121,7 +122,7 @@ popd
 echo "--------End test--------"
 
 echo "--------Processing Results--------"
-pushd "${REPO_NAME}"/tests/"$scenario_name"/results/
+pushd ~/"${REPO_NAME}"/tests/"$scenario_name"/results/
 echo "$start_time" > test_start_time_utc
 echo "$end_time" > test_end_time_utc
 echo "--------Splitting Results--------"
@@ -149,7 +150,7 @@ echo "--------CSV merged--------"
 popd
 
 echo "--------Committing CSV--------"
-pushd "${REPO_NAME}"
+pushd ~/"${REPO_NAME}"
 git clean -xfd
 git add summary/
 git commit -m "Update $scenario_name test results on $(date)"
