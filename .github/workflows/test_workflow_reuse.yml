@@ -47,7 +47,7 @@ jobs:
       id: create-ppg
       env:
         RESOURCE_GROUP: ${{ secrets.CLUSTER_RESOURCE_GROUP }}
-        PPG_NAME: ${{ github.event.inputs.clusterName }}-ppg
+        PPG_NAME: ${{ inputs.clusterName }}-ppg
       run: |
         az ppg create \
           -n "${PPG_NAME}" \
@@ -234,6 +234,7 @@ jobs:
       continue-on-error: true
       run: |
         az resource delete --ids $(az resource list --tag benchmark-number=${{ steps.write.outputs.vm-name }} -otable --query "[].id" -otsv)
+
   cleanup:
     needs: build
     name: clean up
@@ -247,4 +248,4 @@ jobs:
     - name: Cleaning up the cluster
       run: |
         az aks delete --name ${{ inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
-        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+        az ppg delete --name ${{ inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
