@@ -243,5 +243,5 @@ jobs:
         creds: ${{secrets.AZURE_CREDENTIALS}}
     - name: Cleaning up the cluster
       run: |
-        az aks delete --name ${{ inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
-        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
+        az aks delete --name ${{ inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+        az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
