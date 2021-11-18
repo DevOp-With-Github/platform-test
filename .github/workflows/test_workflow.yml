@@ -154,7 +154,7 @@ jobs:
       with:
         host: ${{ steps.vminstance.outputs.ip-address }}
         username: ${{ secrets.VM_USER }}
-        password: ${{ secrets.VM_PWD }}
+        key_path: 'id_rsa'
         envs: IP,SCENARIO_NAME,GITHUB_TOKEN,PAYLOAD,USERS
         command_timeout: '180m' #3 hours
         timeout: 300s #5 mins
