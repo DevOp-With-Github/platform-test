@@ -1,5 +1,5 @@
 [container.image]
-repository= "trankietnhi/xlight05"
+repository= "xlight05"
 name="test_passthrough"
 
 [cloud.deployment]
