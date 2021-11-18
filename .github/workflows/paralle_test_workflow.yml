@@ -9,11 +9,11 @@ on:
         required: false
 jobs:
   execute_test_1:
-    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse@main
+    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse.yml@main
     with:
       clusterName: ${{ github.event.inputs.clusterName}}-1
   execute_test_2:
-    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse@main
+    uses: kietnhitran/DevOp-With-Github/platform-test/.github/workflows/test_workflow_reuse.yml@main
     with:
       clusterName: ${{ github.event.inputs.clusterName}}-2
   
