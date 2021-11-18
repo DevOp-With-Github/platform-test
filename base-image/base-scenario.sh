@@ -54,5 +54,5 @@ if [[ -z $concurrent_users ]]; then
     exit 1
 fi
 
-scriptsDir="/home/bal-admin/ballerina-performance-cloud/tests/"$scenario_name"/scripts"
-resultsDir="/home/bal-admin/ballerina-performance-cloud/tests/"$scenario_name"/results"
+scriptsDir="platform-test/tests/"$scenario_name"/scripts"
+resultsDir="platform-test/tests/"$scenario_name"/results"

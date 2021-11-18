@@ -82,6 +82,8 @@ fi
 
 rm -rf ~/uploads
 REPO_NAME="platform-test"
+pwd
+ls -la
 rm -rf ~/"${REPO_NAME}"/tests/"$scenario_name"/results
 
 timestamp=$(date +%s)
