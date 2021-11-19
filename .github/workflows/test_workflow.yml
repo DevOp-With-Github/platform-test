@@ -63,7 +63,7 @@ jobs:
             --node-osdisk-type Managed \
             --node-count 2 \
             --location "eastus" \
-            --enable-addons monitoring
+            --enable-addons monitoring \
             --generate-ssh-keys
         wsid=$(az aks show --name aks-mubhouq4itdls --resource-group rg-bu0001a0008 --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
         echo "::set-output name=ws-id::${wsid}"
