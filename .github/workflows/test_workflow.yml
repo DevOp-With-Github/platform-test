@@ -44,6 +44,7 @@ jobs:
         echo "::set-output name=ppg-id::${ppgid}"
         echo "ppg-id: ${ppgid}"
     - name: Create Cluster
+      id: create-cluster
       env:
         AZURE_APP_ID: ${{ secrets.AZURE_APP_ID }}
         AZURE_APP_PASSWORD: ${{ secrets.AZURE_APP_PASSWORD }}
@@ -62,7 +63,11 @@ jobs:
             --node-osdisk-type Managed \
             --node-count 2 \
             --location "eastus" \
+            --enable-addons monitoring
             --generate-ssh-keys
+        wsid=$(az aks show --name aks-mubhouq4itdls --resource-group rg-bu0001a0008 --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
+        echo "::set-output name=ws-id::${wsid}"
+        echo "ws-id: ${wsid}"
     - name: Configure AKS
       uses: azure/aks-set-context@v1
       with:
@@ -90,6 +95,7 @@ jobs:
         | head -n1
     outputs:
       ppgid: ${{ steps.create-ppg.outputs.ppg-id }}
+      wsid: ${{ steps.create-cluster.outputs.ws-id }}
   build:
     needs: setup
     runs-on: ubuntu-latest
@@ -195,14 +201,26 @@ jobs:
           execute-tests.sh -c $IP -s $SCENARIO_NAME -p $PAYLOAD -u $USERS
     - name: copy file to host
       run: |
-        ls -la
+        ls -ltr
         scp -r -v -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.VM_USER }}@${{ steps.vminstance.outputs.ip-address }}:uploads uploads
-        ls -la
+    - name: Gather Serverside metrics
+      run: |
+          sudo chmod -R 777 $(pwd)/"uploads"
+          results_dir=$(pwd)/"uploads/results"
+          echo ${results_dir}
+          ls -la ${results_dir}
+          sudo rm ${results_dir}/original-warmup.jtl
+          sudo rm ${results_dir}/original-measurement.jtl
+          pwd
+          start_time=$(cat ${results_dir}/test_start_time_utc)
+          end_time=$(cat ${results_dir}/test_end_time_utc)
+          util_dir=$(pwd)/"utils/server-side-data-collector/"
+          bash utils/server-side-data-collector/generate-static-reports.sh ${{ secrets.AZURE_APP_ID }} ${{ secrets.AZURE_APP_PASSWORD }} "${{ github.event.inputs.clusterName }}" ${{ secrets.CLUSTER_RESOURCE_GROUP }} ${{ secrets.SUBSCRIPTION_ID }} ${util_dir} ${{ secrets.TENANT_ID }} ${results_dir} ${{ needs.setup.outputs.wsid}} ${start_time} ${end_time}
     - name: upload results
       uses: actions/upload-artifact@v2
       with:
         name: ${{ inputs.clusterName }}
-        path: uploads/results/summary.csv
+        path: uploads/results
     - name: Undeploy Kubernetes artifacts
       if: always()
       run: |
