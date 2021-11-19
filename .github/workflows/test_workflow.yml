@@ -65,6 +65,9 @@ jobs:
             --location "eastus" \
             --enable-addons monitoring \
             --generate-ssh-keys
+    - name: output wsid
+      id: output-wsid
+      run: |
         wsid=$(az aks show --name "${{ github.event.inputs.clusterName }}" --resource-group "${RESOURCE_GROUP}" --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
         echo "::set-output name=ws-id::${wsid}"
         echo "ws-id: ${wsid}"
@@ -95,7 +98,7 @@ jobs:
         | head -n1
     outputs:
       ppgid: ${{ steps.create-ppg.outputs.ppg-id }}
-      wsid: ${{ steps.create-cluster.outputs.ws-id }}
+      wsid: ${{ steps.output-wsid.outputs.ws-id }}
   build:
     needs: setup
     runs-on: ubuntu-latest
