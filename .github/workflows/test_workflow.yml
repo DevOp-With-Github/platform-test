@@ -43,6 +43,13 @@ jobs:
         --query id --output tsv)
         echo "::set-output name=ppg-id::${ppgid}"
         echo "ppg-id: ${ppgid}"
+    - name: create WS
+      id: create-ws
+      run: |
+        az monitor log-analytics workspace create --resource-group "${{ secrets.CLUSTER_RESOURCE_GROUP }}" --workspace-name "${{ github.event.inputs.clusterName }}"-ws --location eastus
+        wsid=$(az monitor log-analytics workspace show --resource-group "${{ secrets.CLUSTER_RESOURCE_GROUP }}" --workspace-name "${{ github.event.inputs.clusterName }}-ws" --query id --output tsv)
+        echo "::set-output name=ws-id::${wsid}"
+        echo "ws-id: ${wsid}"
     - name: Create Cluster
       id: create-cluster
       env:
@@ -63,6 +70,8 @@ jobs:
             --node-osdisk-type Managed \
             --node-count 2 \
             --location "eastus" \
+            --enable-addons monitoring \
+            --workspace-resource-id "${{ steps.create-workspace.outputs.wsid }}" \
             --generate-ssh-keys
     - name: output wsid
       id: output-wsid
@@ -97,7 +106,7 @@ jobs:
         | head -n1
     outputs:
       ppgid: ${{ steps.create-ppg.outputs.ppg-id }}
-      wsid: ${{ steps.output-wsid.outputs.ws-id }}
+      wsid: ${{ steps.create-ws.outputs.ws-id }}
   build:
     needs: setup
     runs-on: ubuntu-latest
