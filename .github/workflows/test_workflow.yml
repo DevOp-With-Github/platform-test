@@ -71,14 +71,8 @@ jobs:
             --node-count 2 \
             --location "eastus" \
             --enable-addons monitoring \
-            --workspace-resource-id "${{ steps.create-workspace.outputs.wsid }}" \
+            --workspace-resource-id "${{ steps.create-ws.outputs.ws-id }}" \
             --generate-ssh-keys
-    - name: output wsid
-      id: output-wsid
-      run: |
-        wsid=$(az aks show --name "${{ github.event.inputs.clusterName }}" --resource-group "${RESOURCE_GROUP}" --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
-        echo "::set-output name=ws-id::${wsid}"
-        echo "ws-id: ${wsid}"
     - name: Configure AKS
       uses: azure/aks-set-context@v1
       with:
