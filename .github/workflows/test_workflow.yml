@@ -65,7 +65,7 @@ jobs:
             --location "eastus" \
             --enable-addons monitoring \
             --generate-ssh-keys
-        wsid=$(az aks show --name aks-mubhouq4itdls --resource-group rg-bu0001a0008 --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
+        wsid=$(az aks show --name "${{ github.event.inputs.clusterName }}" --resource-group "${RESOURCE_GROUP}" --query 'addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceId' --output tsv)
         echo "::set-output name=ws-id::${wsid}"
         echo "ws-id: ${wsid}"
     - name: Configure AKS
