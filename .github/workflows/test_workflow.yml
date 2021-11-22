@@ -250,3 +250,4 @@ jobs:
       run: |
         az aks delete --name ${{ github.event.inputs.clusterName }} --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -y
         az ppg delete --name ${{ github.event.inputs.clusterName }}-ppg --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+        az monitor log-analytics workspace delete  --workspace-name "${{ github.event.inputs.clusterName }}"-ws --resource-group ${{ secrets.CLUSTER_RESOURCE_GROUP }} -f -y
