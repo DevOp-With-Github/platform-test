@@ -39,4 +39,4 @@ docker container run \
        $SUBSCRIPTION_ID_SYSTEM \
        $RESOURCE_GROUP_SYSTEM \
        $CLUSTER_NAME_SYSTEM \
-       $NAMESPACE_SYSTEM"
+       $NAMESPACE_SYSTEM
